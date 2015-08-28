@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="grey" type="color">#424242</item>
+    <item name="white" type="color">#FFFFFF</item>
+    <item name="pink" type="color">#FF5252</item>
+    <item name="blacktint" type="color">#80000000</item>
+    <item name="darkblue" type="color">#FF0099CC</item>
+    <item name="bluegrey" type="color">#424242</item>
+</resources>
