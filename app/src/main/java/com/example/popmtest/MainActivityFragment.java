@@ -1,6 +1,9 @@
 package com.example.popmtest;
 
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -49,6 +52,13 @@ public class MainActivityFragment extends Fragment {
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.menu_main_fragment, menu);
+        MenuItem sort_by_popularity = menu.findItem(R.id.sort_by_popularity);
+        MenuItem sort_by_rated = menu.findItem(R.id.sort_by_rating);
+        if (mSortyBy.contentEquals("popularity.desc")) {
+            sort_by_popularity.setChecked(true);
+        } else if (mSortyBy.contentEquals("vote_average.desc")) {
+            sort_by_rated.setChecked(true);
+        }
         super.onCreateOptionsMenu(menu, inflater);
     }
 
@@ -57,18 +67,28 @@ public class MainActivityFragment extends Fragment {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-        if (id == R.id.sort_by_popularity) {
-            mSortyBy = "popularity.desc";
-            updateMovies(mSortyBy);
-            return true;
+        switch (item.getItemId()) {
+            case R.id.sort_by_popularity :
+                if (item.isChecked()) {
+                    item.setChecked(false);
+                } else {
+                    item.setChecked(true);
+                    mSortyBy = "popularity.desc";
+                    updateMovies(mSortyBy);
+                }
+                return true;
+            case R.id.sort_by_rating :
+                if (item.isChecked()) {
+                    item.setChecked(false);
+                } else {
+                    item.setChecked(true);
+                    mSortyBy = "vote_average.desc";
+                    updateMovies(mSortyBy);
+                }
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
-        if (id == R.id.sort_by_rating) {
-            mSortyBy = "vote_average.desc";
-            updateMovies(mSortyBy);
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -98,11 +118,20 @@ public class MainActivityFragment extends Fragment {
                     mMovieAdapter.setData(mMovie);
                 }
             }
+        } else {
+            if (isNetworkAvailable()) {
+                updateMovies(mSortyBy);
+            }
         }
 
-        updateMovies(mSortyBy);
-
         return rootView;
+    }
+
+    //Based on a stackoverflow snippet
+    private boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 
     private void updateMovies(String sortBy) {

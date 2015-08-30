@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,25 +35,25 @@ public class DetailActivityFragment extends Fragment {
         Intent intent = getActivity().getIntent();
         Movie movieObjInToClass = intent.getExtras().getParcelable("myMovieObj");
 
-        Log.v(LOG_TAG, "objToClass Vote" + movieObjInToClass.getVote());
+        if (movieObjInToClass != null) {
+            mPosterView = (ImageView) detailView.findViewById(R.id.poster_detail);
+            mBackdropView = (ImageView) detailView.findViewById(R.id.backdrop_detail);
+            mTitleView = (TextView) detailView.findViewById(R.id.movie_title);
+            mReleaseView = (TextView) detailView.findViewById(R.id.movie_release);
+            mVoteView = (TextView) detailView.findViewById(R.id.movie_vote);
+            mOverviewView = (TextView) detailView.findViewById(R.id.overview);
 
-        mPosterView = (ImageView) detailView.findViewById(R.id.poster_detail);
-        mBackdropView = (ImageView) detailView.findViewById(R.id.backdrop_detail);
-        mTitleView = (TextView) detailView.findViewById(R.id.movie_title);
-        mReleaseView = (TextView) detailView.findViewById(R.id.movie_release);
-        mVoteView = (TextView) detailView.findViewById(R.id.movie_vote);
-        mOverviewView = (TextView) detailView.findViewById(R.id.overview);
+            String backdropImageUrl = "http://image.tmdb.org/t/p/w342" + movieObjInToClass.getBackdrop();
+            Picasso.with(mContext).load(backdropImageUrl).into(mBackdropView);
 
-        String backdropImageUrl = "http://image.tmdb.org/t/p/w342" + movieObjInToClass.getBackdrop();
-        Picasso.with(mContext).load(backdropImageUrl).into(mBackdropView);
-
-        String posterImageUrl = "http://image.tmdb.org/t/p/w185" + movieObjInToClass.getPoster();
-        Picasso.with(mContext).load(posterImageUrl).into(mPosterView);
-        mTitleView.setText(movieObjInToClass.getTitle());
-        mReleaseView.setText(movieObjInToClass.getReleaseDate());
-        String voteResult = Double.toString(movieObjInToClass.getVote());
-        mVoteView.setText(voteResult);
-        mOverviewView.setText(movieObjInToClass.getOverview());
+            String posterImageUrl = "http://image.tmdb.org/t/p/w185" + movieObjInToClass.getPoster();
+            Picasso.with(mContext).load(posterImageUrl).into(mPosterView);
+            mTitleView.setText(movieObjInToClass.getTitle());
+            mReleaseView.setText(movieObjInToClass.getReleaseDate());
+            String voteResult = Double.toString(movieObjInToClass.getVote());
+            mVoteView.setText(voteResult);
+            mOverviewView.setText(movieObjInToClass.getOverview());
+        }
 
         return  detailView;
     }
